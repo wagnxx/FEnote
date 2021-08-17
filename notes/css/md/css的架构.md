@@ -104,10 +104,18 @@ b-full{
 }
 ```
 
-### 经对以上总结，合理的组合有利于代码的持续进行和开发者轻松管理，以ITCSS为核心，自上至下和其他策略配合进行，以以下分工组织：
+### 经对以上总结，合理的组合有利于代码的持续进行和开发者轻松管理，以ITCSS为核心，自上至下和其他策略配合进行，每一块都可以结合BEM和OOCSS,以以下分工组织：
 - ITCSS的Setting层，一般是全局变量，函数，可以放把 SMACSS的THEME放在此处，随着css的发展 less/sass 退化后 可以不考虑函数;文件命名：_setting.global.css
 - ITCSS的GEneric层，第三方reset ;文件命名：_generic.reset.css
 - ITCSS的Base层，和上层一样，只是此处是对 HTML Element的全局设置；文件命名：_element.heading.css
 - ITCSS的Object层，基础的抽象结构，不包含Theme；文件命名： _object.layout.css
 - ITCSS的Component层，此处是具体的实现层，可以充分利用 BEM ，OOCSS了;文件命名：_component.buttons.css
 - ITCSS的Trumpt层， 重写;文件命名：_trumps.links.css
+
+
+### css属性顺序
+1. 位置 （position，z-index）
+2. 大小  (w h p m)
+3. 文字系列 (font line-height)
+4. 背景 (bg,border)
+5. 其他 (animation)
