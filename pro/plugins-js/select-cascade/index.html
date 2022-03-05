@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>cascade select plugin</title>
+    <script src="./js/jquery.js"></script>
+    <script src="./js/json.js"></script>
+    <script src="./js/cascade-select.js"></script>
+    <style>
+      .container {
+        width: 80%;
+        margin: 30px auto;
+      }
+      .filters {
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        background-color: #f3f3f3;
+      }
+      .filter__item {
+        flex: 1;
+      }
+      .filter__item > select {
+        width: 100%;
+        height: 30px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div
+        style="
+          width: 30px;
+          height: 30px;
+          background-color: #000;
+          text-align: center;
+          border-radius: 100%; ;;
+        "
+      >
+        <span style="color: red; font-weight: 600">&#10003;</span>
+      </div>
+      <div class="filters">
+        <div class="filter__item">
+          <select field="district" placeholder="district"></select>
+        </div>
+        <div class="filter__item">
+          <select field="subDistrict" placeholder="district"></select>
+        </div>
+        <div class="filter__item">
+          <select field="building" placeholder="district"></select>
+        </div>
+      </div>
+    </div>
+    <script>
+      var cascade = CascadeSelect.createAutoCascade(
+        ['district', 'subDistrict', 'building'],
+        {
+          // init: true,
+          // autoFill: true,
+          // defaultValue: {
+          //   id: '7521000044',
+          //   district: '深圳北',
+          //   subDistrict: '龙岗区',
+          //   building: 'N-4'
+          // },
+          fetch: function (...args) {
+            return new Promise((resolve, reject) => {
+              var data = getOffice(...args);
+              var rt = Math.random() * 1000;
+              setTimeout(function () {
+                resolve(data);
+              }, rt);
+            });
+          }
+        }
+      );
+
+      function getOffice(level, fieldValMap) {
+        var name;
+        switch (level) {
+          case '':
+            return buildings.map(transOption);
+          case 'district':
+            return Object.keys(grouByName(level)).map(transOption);
+          case 'subDistrict':
+            name = fieldValMap['district'];
+            var curDis = buildings.filter((item) => item.district == name);
+            return curDis
+              .map((item) => item.subDistrict)
+              .reduce(reduceFilter, [])
+              .map(transOption);
+          case 'building':
+            name = fieldValMap['subDistrict'];
+            var curDis = buildings.filter((item) => item.subDistrict == name);
+            return curDis
+              .map((item) => item.building)
+              .reduce(reduceFilter, [])
+              .map(transOption);
+        }
+      }
+
+      function reduceFilter(a, b) {
+        if (a.includes(b)) return a;
+        return a.concat(b);
+      }
+
+      function transOption(item) {
+        return { value: item, label: item };
+      }
+
+      var de = {
+        id: '7521000044',
+        district: '深圳北',
+        subDistrict: '龙岗区',
+        building: 'N-4'
+      };
+    </script>
+  </body>
+</html>
